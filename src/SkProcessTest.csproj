@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SemanticKernel" Version="1.63.0" />
+    <PackageReference Include="Microsoft.SemanticKernel.Connectors.AzureAIInference" Version="1.64.0-beta" />
     <PackageReference Include="Microsoft.SemanticKernel.Process.Abstractions" Version="1.63.0-alpha" />
     <PackageReference Include="Microsoft.SemanticKernel.Process.Core" Version="1.63.0-alpha" />
     <PackageReference Include="Microsoft.SemanticKernel.Process.LocalRuntime" Version="1.63.0-alpha" />

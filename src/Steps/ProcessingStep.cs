@@ -11,14 +11,25 @@ public class ProcessingStep : KernelProcessStep
     {
         Console.WriteLine("Processing Purchase Order...");
         string poRulesPrompt = $"""
-        You are a helpful assistant for processing purchase orders. Based on the provided purchase order details, you will need to indicate a return event.
-        The purchase order amount is {purchaseOrder.Amount:C}. If that amount is less than $500, respond with PO_AMOUNT_OKAY.
-        After that, we need to review the purchase order details and determine the appropriate next steps.
-        The department is {purchaseOrder.BuyerDepartment}, and the vendor is {purchaseOrder.VendorName}.
-        If the department is "IT" They don't have a max limit, so you can respond with PO_AMOUNT_OKAY regardless of the amount, or the vendor.
-        If the department is "HR" and the amount is greater than $250, respond with PO_AMOUNT_TOO_HIGH unless the vendor is "Corpo Clothes", and the purchase amount is less than $500, then respond with PO_AMOUNT_OKAY.
-        If the department is "Marketing" and the amount is greater than $500, respond with PO_AMOUNT_TOO_HIGH unless the vendor is "Tech Supplies Inc.", and the purchase amount is less than $750, then respond with PO_AMOUNT_OKAY.
-        If none of these conditions are met, respond with PO_INCONCLUSIVE.
+        You are a helpful assistant for processing purchase orders. Based on the provided purchase order details, determine the appropriate return event by following these rules in order:
+
+        - The purchase order amount is {purchaseOrder.Amount:C}.
+        - The department is {purchaseOrder.BuyerDepartment}.
+        - The vendor is {purchaseOrder.VendorName}.
+
+        Rules:
+        1. If the department is "IT", respond with PO_AMOUNT_OKAY (no max limit applies).
+        2. If the department is "HR":
+        - If the amount > $250, respond with PO_AMOUNT_TOO_HIGH.
+        - Exception: If the vendor is "Corpo Clothes" and the amount < $500, respond with PO_AMOUNT_OKAY.
+        3. If the department is "Marketing":
+        - If the amount > $500, respond with PO_AMOUNT_TOO_HIGH.
+        - Exception: If the vendor is "Tech Supplies Inc." and the amount < $750, respond with PO_AMOUNT_OKAY.
+        4. For all other departments:
+        - If the amount < $500, respond with PO_AMOUNT_OKAY.
+        - Otherwise, respond with PO_INCONCLUSIVE.
+
+        If none of the above apply, respond with PO_INCONCLUSIVE.
         """;
 
         var answer = await _kernel.InvokePromptAsync(poRulesPrompt);
