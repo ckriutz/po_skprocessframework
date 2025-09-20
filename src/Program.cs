@@ -3,6 +3,7 @@
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Process.Runtime;
 using System;
+using System.IO;
 
 Console.WriteLine("Testing the Semantic Kernel PO process.");
 
@@ -21,16 +22,13 @@ Kernel kernel = Kernel.CreateBuilder()
 var process = PurchaseOrderProcess.CreateProcess();
 
 // In order to start the process, we need to send a StartAsync.
-// We're also going to send an IT PO to the system, after all it needs something to process!
-await using var ItPoProcess = await process.StartAsync(kernel, new KernelProcessEvent()
+// We're going to iterate through all PNG files in the PurchaseOrders folder and send each to the process.
+var poFiles = Directory.GetFiles("PurchaseOrders", "*.png");
+foreach (var poFile in poFiles)
 {
-    Id = "IntakeStep", // Use the step name
-    Data = "PurchaseOrders/AdventureWorksPO_ITOrder.png"
-});
-
-// We're also going to send an HR PO to the system, after all it needs something to process!
-await using var HrPoProcess = await process.StartAsync(kernel, new KernelProcessEvent()
-{
-    Id = "IntakeStep", // Use the step name
-    Data = "PurchaseOrders/AdventureWorksPO_HROrder.png"
-});
+    await using var poProcess = await process.StartAsync(kernel, new KernelProcessEvent()
+    {
+        Id = "IntakeStep", // Use the step name
+        Data = poFile
+    });
+}

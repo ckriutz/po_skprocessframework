@@ -15,15 +15,16 @@ public class ProcessingStep : KernelProcessStep
 
         - The purchase order amount is {purchaseOrder.Amount:C}.
         - The department is {purchaseOrder.BuyerDepartment}.
-        - The vendor is {purchaseOrder.VendorName}.
+        - The vendor is {purchaseOrder.SupplierName}.
 
         Rules:
         1. If the department is "IT", respond with PO_AMOUNT_OKAY (no max limit applies).
         2. If the department is "HR":
         - If the amount > $250, respond with PO_AMOUNT_TOO_HIGH.
-        - Exception: If the vendor is "Corpo Clothes" and the amount < $500, respond with PO_AMOUNT_OKAY.
+        - Exception: If the vendor is "Stuff We All Get Inc." and the amount < $1000, respond with PO_AMOUNT_OKAY.
         3. If the department is "Marketing":
         - If the amount > $500, respond with PO_AMOUNT_TOO_HIGH.
+        - If the amount is less than or equal to $500, respond with PO_AMOUNT_OKAY.
         - Exception: If the vendor is "Tech Supplies Inc." and the amount < $750, respond with PO_AMOUNT_OKAY.
         4. For all other departments:
         - If the amount < $500, respond with PO_AMOUNT_OKAY.
@@ -33,7 +34,7 @@ public class ProcessingStep : KernelProcessStep
         """;
 
         var answer = await _kernel.InvokePromptAsync(poRulesPrompt);
-        Console.WriteLine($"PO Processing result: {answer}");
+        Console.Write($" PO Processing result: {answer}");
 
         await context.EmitEventAsync(answer.ToString(), purchaseOrder);
     }

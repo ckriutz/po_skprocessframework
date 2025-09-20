@@ -47,13 +47,14 @@ public sealed class IntakeStep : KernelProcessStep
         };
 
         string extractionPrompt = """
-        Analyze this purchase order image and extract the key details: PO Number and Total Amount.
+        Analyze this purchase order image and extract the key details: PO Number, Grand Total, Supplier Name, Notes, and Buyer Department.
         Return the data strictly as JSON matching this schema:
         {
             "poNumber": "string",
-            "amount": "number"
-            "vendorName": "string",
+            "grandTotal": "number",
+            "supplierName": "string",
             "buyerDepartment": "string"
+            "notes": "string"
         }
         Do not include any additional text or explanations.
         """;
